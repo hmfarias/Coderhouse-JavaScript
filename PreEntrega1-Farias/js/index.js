@@ -1,4 +1,4 @@
-/* 
+/* CONSIGNAS:
 Crear un algoritmo con un condicional
 Crear un algoritmo utilizando un ciclo
 Armar un simulador interactivo, la estructura final de tu proyecto integrador
@@ -34,41 +34,57 @@ const PORCE_LEY_19032 = 0.03;
 const PORCE_OBRA_SOCIAL = 0.03;
 const PORCE_SUVICO = 0.03;
 
-//FUNCIONES A UTILIZAR ---------------------------------------------------
-//Años bisiestos son aquellos en los que el numero de año es multiplo exacto de 4 excepto para los años divisibles por 100 que no son años bisiestos, a menos que sean divisibles por 400
-//Función esBisiesto devuelve verdadero o falso según el año recibido por parámetro sea bisiesto o no respectivamente
-//Parámetros: ano (es el número de año sobre el cual se desea saber si es bisiesto)
-const esBisiesto = (ano) => {
-	if ((ano % 4 === 0 && ano % 100 != 0) || ano % 400 === 0) {
-		return true;
-	}
-	return false;
-};
+//FUNCIONES A UTILIZAR ----------------------------------------------------------------------------------------------
 
-//Función esMes31 devuelve verdadero o falso segun se trate de un mes de 31 dias o no
-//Parámetros: mes (es el número de mes sobre el cual se desea saber si tiene 31 días)
-const esMes31 = (mes) => {
-	if (
-		mes === 1 ||
-		mes === 3 ||
-		mes === 5 ||
-		mes === 7 ||
-		mes === 8 ||
-		mes === 10 ||
-		mes === 12
-	) {
-		return true;
-	}
-	return false;
-};
+//Función pedirValor solicita mediante prompt un determinado valor.
+//Parámetros: nombreValor (es el nombre del valor a solicitar que se mostrará en el prompt)
+//Devuelve el valor para el nombreValor ingresado, luego de validarlo
+const pedirValor = (nombreValor) => {
+	let continuar;
+	let valor;
+	do {
+		valor = parseInt(prompt(`Ingrese ${nombreValor} o CERO para cancelar:`));
+		switch (nombreValor.toUpperCase()) {
+			case 'MES':
+				if (isNaN(valor) || valor < 0 || valor > 12) {
+					alert(`Ingrese un valor válido para ${nombreValor}`);
+					continuar = 'si';
+				} else {
+					continuar = 'no';
+				}
+				break;
+			case 'AÑO':
+				if (isNaN(valor) || valor < 0) {
+					alert(`Ingrese un valor válido para ${nombreValor}`);
+					continuar = 'si';
+				} else {
+					continuar = 'no';
+				}
+				break;
+			case 'HORAS TRABAJADAS':
+				if (isNaN(valor) || valor < 0) {
+					alert(`Ingrese un valor válido para ${nombreValor}`);
+					continuar = 'si';
+				} else {
+					continuar = 'no';
+				}
+				break;
+			case 'FERIADOS TRABAJADOS':
+				if (isNaN(valor) || valor < 0 || valor > calcularFeriados(mes)) {
+					alert(`Ingrese un valor válido para ${nombreValor}`);
+					continuar = 'si';
+				} else {
+					continuar = 'no';
+				}
+				break;
 
-//Función esFebrero devuelve verdadero o falso segun se trate del mes de febrero
-//Parámetros: mes (es el número de mes sobre el cual se desea saber si es febrero)
-const esFebrero = (mes) => {
-	if (mes === 2) {
-		return true;
-	}
-	return false;
+			default:
+				break;
+		}
+
+		if (valor === 0) continuar = 'no';
+	} while (continuar === 'si');
+	return valor;
 };
 
 //Función calcularHorasBase devuelve las horas base del mes
@@ -85,25 +101,38 @@ const esFebrero = (mes) => {
 */
 const calculaHorasBase = (mes, ano) => {
 	let horasBase;
-	switch (true) {
-		case esMes31(mes):
+	const diasMes = new Date(ano, mes, 0).getDate(); //devuelve la cantidad de dias del mes
+	switch (diasMes) {
+		case 31:
 			horasBase = 216;
 			break;
 
-		case esFebrero(mes):
-			if (esBisiesto(ano)) {
-				horasBase = 200;
-			} else {
-				2;
-				horasBase = 192;
-			}
+		case 29:
+			horasBase = 200;
+			break;
+
+		case 28:
+			horasBase = 192;
 			break;
 
 		default:
 			horasBase = 208;
-			break;
 	}
 	return horasBase;
+};
+
+//Funcion calcularDiasTrabajados devuelve la equivalencia en días de trabajo en base a las horas base del mes
+//Parámetros: 	horasTrabajadas (número dehoras trabajadas por el empleado)
+//				horasBase (número de horas base del mes seleccionado)
+//				mes (número del mes con el que se está trabajando)
+//				ano (número del año con el que se está trabajando)
+const calcularDiasTrabajados = (horasTrabajadas, horasBase, mes, ano) => {
+	const diasMes = new Date(ano, mes, 0).getDate(); //devuelve la cantidad de dias del mes
+	const diasTrabajados = Math.ceil((horasTrabajadas / horasBase) * diasMes); //redondeo hacia arriba en favor del empleado
+	if (diasTrabajados > diasMes) {
+		return diasMes;
+	}
+	return diasTrabajados;
 };
 
 //Función calcularExtras devuelve las horas extras trabajadas en caso de corresponder
@@ -150,83 +179,44 @@ const calcularFeriados = (mes) => {
 	}
 	return cantidadFeriados;
 };
-//FIN FUNCIONES A UTILIZAR ---------------------------------------------------
+//FIN FUNCIONES A UTILIZAR ------------------------------------------------------------------------------------------
 
-//DATOS DE MES Y AÑO -----------------------------------------------------
-let continuar;
-let mes;
-let ano;
+// ALGORITMO *******************************************************************************************************
 
-//PIDO MES VALIDO
-do {
-	mes = parseInt(prompt('Ingrese MES o CERO para cancelar:'));
-	if (isNaN(mes) || mes < 0 || mes > 12) {
-		alert('ingrese un MES válido');
-		continuar = 'si';
-	} else {
-		continuar = 'no';
-	}
-	if (mes === 0) continuar = 'no';
-} while (continuar === 'si');
+//PIDO MES A LIQUIDAR VALIDO -------------------------------------------------
+const mes = pedirValor('MES');
+console.log(mes);
 
-//PIDO AÑO VALIDO
-do {
-	ano = parseInt(prompt('Ingrese AÑO o CERO para cancelar:'));
-	if (isNaN(ano) || ano < 0) {
-		alert('Ingrese un AÑO válido');
-		continuar = 'si';
-	} else {
-		continuar = 'no';
-	}
-	if (ano === 0) continuar = 'no';
-} while (continuar === 'si');
-//FIN DATOS DE MES Y AÑO ----------------------------------------------------
+//PIDO AÑO A LIQUIDAR VALIDO -------------------------------------------------
+const ano = pedirValor('AÑO');
 
-//ESTABLEZCO HORAS BASE DEL MES ---------------------------------------------
-let horasBase = calculaHorasBase(mes, ano);
+//ESTABLEZCO HORAS BASE PARA EL MES Y AÑO SELECCIONADOS ----------------------
+const horasBase = calculaHorasBase(mes, ano);
 
-//PIDO LAS HORAS TRABAJADAS -------------------------------------------------
-let horasTrabajadas;
-do {
-	horasTrabajadas = parseInt(
-		prompt('Ingrese el total de HORAS TRABAJADAS o CERO para cancelar:')
-	);
-	if (isNaN(horasTrabajadas) || horasTrabajadas < 0) {
-		alert('Ingrese un un numero de HORAS TRABAJADAS válido');
-		continuar = 'si';
-	} else {
-		continuar = 'no';
-	}
-	if (horasTrabajadas === 0) continuar = 'no';
-} while (continuar === 'si');
-//FIN PIDO LAS HORAS TRABAJADAS ----------------------------------------------
+//PIDO LAS HORAS TRABAJADAS POR EL EMPLEADO DURANTE EL MES Y AÑO SELECCIONADO-
+const horasTrabajadas = pedirValor('HORAS TRABAJADAS');
 
-//CALCULO HORAS EXTRA - (horas cubiertas que excedan las horas base)
-let horasExtra = calcularExtras(horasTrabajadas, horasBase);
+//CALCULO EQUIVALENCIA EN DIAS PARA ESAS HORAS TRABAJADAS EN BASE A LAS HORAS BASE
+const diasTrabajados = calcularDiasTrabajados(horasTrabajadas, horasBase, mes, ano);
 
-//ESTABLEZCO LA CANTIDAD MÁXIMA DE FERIADOS DEL MES
-const FERIADOS_MES = calcularFeriados(mes);
+//CALCULO HORAS EXTRA - (horas cubiertas que excedan las horas base) --------
+const horasExtra = calcularExtras(horasTrabajadas, horasBase);
 
-//PIDO CANTIDAD DE FERIADOS TRABAJADOS ---------------------------------------
-let feriadosTrabajados;
-do {
-	feriadosTrabajados = parseInt(
-		prompt('Ingrese la cantidad de FERIADOS TRABAJADOS o CERO para cancelar:')
-	);
-	if (
-		isNaN(feriadosTrabajados) ||
-		feriadosTrabajados < 0 ||
-		feriadosTrabajados > FERIADOS_MES
-	) {
-		alert('Ingrese un un numero de FERIADOS TRABAJADOS válido');
-		continuar = 'si';
-	} else {
-		continuar = 'no';
-	}
-	if (feriadosTrabajados === 0) continuar = 'no';
-} while (continuar === 'si');
-//FIN PIDO LAS HORAS TRABAJADAS ----------------------------------------------
+//PIDO CANTIDAD DE FERIADOS TRABAJADOS POR EL EMPLEADO PARA EL MES Y AÑO SELECCIONADOS
+const feriadosTrabajados = pedirValor('FERIADOS TRABAJADOS');
 
+//MUESTRO LA LIQUIDACIÓN POR CONSOLA ----------------------------------------
 console.log(
-	`Mes: ${mes} Año: ${ano} \nHoras base: ${horasBase} \nHoras Trabajadas: ${horasTrabajadas}\nHoras Extra: ${horasExtra} \nFeriados Trabajados: ${feriadosTrabajados} `
+	`Datos ingresados:
+	Mes: ${mes} Año: ${ano}
+	Días del mes: ${new Date(ano, mes, 0).getDate()}
+	Horas base: ${horasBase}
+	Horas Trabajadas: ${horasTrabajadas}
+	Dias a liquidar: ${diasTrabajados}
+	Horas Extra: ${horasExtra} 
+	Feriados Trabajados: ${feriadosTrabajados} \n
+	Liquidación:
+	Sueldo Básico:`
 );
+
+// FIN ALGORITMO ***************************************************************************************************
