@@ -37,8 +37,9 @@ const PORCE_SUVICO = 0.03;
 
 //Función pedirValor solicita mediante prompt un determinado valor.
 //Parámetros: nombreValor (es el nombre del valor a solicitar que se mostrará en el prompt)
+//            mes (es opcional y corresponde al numero del mes con el que se está trabajando)
 //Devuelve el valor para el nombreValor ingresado, luego de validarlo
-const pedirValor = (nombreValor) => {
+const pedirValor = (nombreValor, mes) => {
 	let continuar;
 	let valor;
 	do {
@@ -69,7 +70,7 @@ const pedirValor = (nombreValor) => {
 				}
 				break;
 			case 'FERIADOS TRABAJADOS':
-				if (isNaN(valor) || valor < 0 || valor > calcularFeriados(MES)) {
+				if (isNaN(valor) || valor < 0 || valor > calcularFeriados(mes)) {
 					alert(`Ingrese un valor válido para ${nombreValor}`);
 					continuar = 'si';
 				} else {
@@ -209,7 +210,7 @@ const DIAS_TRABAJADOS = calcularDiasTrabajados(HORAS_TRABAJADAS, HORAS_BASE, DIA
 const HORAS_EXTRA = calcularExtras(HORAS_TRABAJADAS, HORAS_BASE);
 
 //PIDO CANTIDAD DE FERIADOS TRABAJADOS POR EL EMPLEADO PARA EL MES Y AÑO SELECCIONADOS
-const FERIADOS_TRABAJADOS = pedirValor('FERIADOS TRABAJADOS');
+const FERIADOS_TRABAJADOS = pedirValor('FERIADOS TRABAJADOS, MES');
 
 //CALCULO SUELDO BÁSICO
 const SUELDO_BASICO_LIQUIDACION = calcularSueldoBásico(DIAS_MES, DIAS_TRABAJADOS);
