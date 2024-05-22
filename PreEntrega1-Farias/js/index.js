@@ -22,7 +22,6 @@ const REMUNERATIVO = 123000;
 const FERIADO = 0;
 const NOCTURNIDAD = 0;
 const ANTIGUEDAD = 0;
-const HORAS_EXTRA = 0;
 const VIATICOS = 219000;
 
 //CONCEPTOS NO REMUNERATIVOS
@@ -70,7 +69,7 @@ const pedirValor = (nombreValor) => {
 				}
 				break;
 			case 'FERIADOS TRABAJADOS':
-				if (isNaN(valor) || valor < 0 || valor > calcularFeriados(mes)) {
+				if (isNaN(valor) || valor < 0 || valor > calcularFeriados(MES)) {
 					alert(`Ingrese un valor válido para ${nombreValor}`);
 					continuar = 'si';
 				} else {
@@ -99,9 +98,8 @@ const pedirValor = (nombreValor) => {
     Cuando el empleado NO trabaja las horas base del mes, le corresponde cobrar un PROPORCIONAL a las horas trabajadas
     Cuando el empleado supera las horas base del mes, el excedente se considera HORAS EXTRA
 */
-const calculaHorasBase = (mes, ano) => {
+const calculaHorasBase = (diasMes) => {
 	let horasBase;
-	const diasMes = new Date(ano, mes, 0).getDate(); //devuelve la cantidad de dias del mes
 	switch (diasMes) {
 		case 31:
 			horasBase = 216;
@@ -126,13 +124,12 @@ const calculaHorasBase = (mes, ano) => {
 //				horasBase (número de horas base del mes seleccionado)
 //				mes (número del mes con el que se está trabajando)
 //				ano (número del año con el que se está trabajando)
-const calcularDiasTrabajados = (horasTrabajadas, horasBase, mes, ano) => {
-	const diasMes = new Date(ano, mes, 0).getDate(); //devuelve la cantidad de dias del mes
-	const diasTrabajados = Math.ceil((horasTrabajadas / horasBase) * diasMes); //redondeo hacia arriba en favor del empleado
-	if (diasTrabajados > diasMes) {
+const calcularDiasTrabajados = (horasTrabajadas, horasBase, diasMes) => {
+	const DIAS_TRABAJADOS = Math.ceil((horasTrabajadas / horasBase) * diasMes); //redondeo hacia arriba en favor del empleado
+	if (DIAS_TRABAJADOS > diasMes) {
 		return diasMes;
 	}
-	return diasTrabajados;
+	return DIAS_TRABAJADOS;
 };
 
 //Función calcularExtras devuelve las horas extras trabajadas en caso de corresponder
@@ -179,44 +176,56 @@ const calcularFeriados = (mes) => {
 	}
 	return cantidadFeriados;
 };
+
+//Función calcularSueldoBásico, devuelve el importe correspondiente al concepto Sueldo Basico;
+//Si el empleado trabajó todos los dias se cobra el 100% del concepto; en caso contrario cobrará un proporcional
+const calcularSueldoBásico = (diasMes, diasTrabajados) => {
+	const SB_LIQUIDACION = ((SUELDO_BASICO / diasMes) * diasTrabajados).toFixed(2);
+	return SB_LIQUIDACION;
+};
 //FIN FUNCIONES A UTILIZAR ------------------------------------------------------------------------------------------
 
 // ALGORITMO *******************************************************************************************************
 
 //PIDO MES A LIQUIDAR VALIDO -------------------------------------------------
-const mes = pedirValor('MES');
-console.log(mes);
+const MES = pedirValor('MES');
 
 //PIDO AÑO A LIQUIDAR VALIDO -------------------------------------------------
-const ano = pedirValor('AÑO');
+const ANO = pedirValor('AÑO');
+
+//establezco la cantidad de dias que tiene el mes seleccionado---------------
+const DIAS_MES = new Date(ANO, MES, 0).getDate();
 
 //ESTABLEZCO HORAS BASE PARA EL MES Y AÑO SELECCIONADOS ----------------------
-const horasBase = calculaHorasBase(mes, ano);
+const HORAS_BASE = calculaHorasBase(DIAS_MES);
 
 //PIDO LAS HORAS TRABAJADAS POR EL EMPLEADO DURANTE EL MES Y AÑO SELECCIONADO-
-const horasTrabajadas = pedirValor('HORAS TRABAJADAS');
+const HORAS_TRABAJADAS = pedirValor('HORAS TRABAJADAS');
 
 //CALCULO EQUIVALENCIA EN DIAS PARA ESAS HORAS TRABAJADAS EN BASE A LAS HORAS BASE
-const diasTrabajados = calcularDiasTrabajados(horasTrabajadas, horasBase, mes, ano);
+const DIAS_TRABAJADOS = calcularDiasTrabajados(HORAS_TRABAJADAS, HORAS_BASE, DIAS_MES);
 
 //CALCULO HORAS EXTRA - (horas cubiertas que excedan las horas base) --------
-const horasExtra = calcularExtras(horasTrabajadas, horasBase);
+const HORAS_EXTRA = calcularExtras(HORAS_TRABAJADAS, HORAS_BASE);
 
 //PIDO CANTIDAD DE FERIADOS TRABAJADOS POR EL EMPLEADO PARA EL MES Y AÑO SELECCIONADOS
-const feriadosTrabajados = pedirValor('FERIADOS TRABAJADOS');
+const FERIADOS_TRABAJADOS = pedirValor('FERIADOS TRABAJADOS');
+
+//CALCULO SUELDO BÁSICO
+const SUELDO_BASICO_LIQUIDACION = calcularSueldoBásico(DIAS_MES, DIAS_TRABAJADOS);
 
 //MUESTRO LA LIQUIDACIÓN POR CONSOLA ----------------------------------------
 console.log(
 	`Datos ingresados:
-	Mes: ${mes} Año: ${ano}
-	Días del mes: ${new Date(ano, mes, 0).getDate()}
-	Horas base: ${horasBase}
-	Horas Trabajadas: ${horasTrabajadas}
-	Dias a liquidar: ${diasTrabajados}
-	Horas Extra: ${horasExtra} 
-	Feriados Trabajados: ${feriadosTrabajados} \n
+	Mes: ${MES} Año: ${ANO}
+	Días del mes: ${DIAS_MES}
+	Horas base: ${HORAS_BASE}
+	Horas Trabajadas: ${HORAS_TRABAJADAS}
+	Dias a liquidar: ${DIAS_TRABAJADOS}
+	Horas Extra: ${HORAS_EXTRA} 
+	Feriados Trabajados: ${FERIADOS_TRABAJADOS} \n
 	Liquidación:
-	Sueldo Básico:`
+	Sueldo Básico: $ ${Intl.NumberFormat('de-DE').format(SUELDO_BASICO_LIQUIDACION)} `
 );
 
 // FIN ALGORITMO ***************************************************************************************************
