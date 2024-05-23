@@ -178,11 +178,40 @@ const calcularFeriados = (mes) => {
 	return cantidadFeriados;
 };
 
-//Función calcularSueldoBásico, devuelve el importe correspondiente al concepto Sueldo Basico;
-//Si el empleado trabajó todos los dias se cobra el 100% del concepto; en caso contrario cobrará un proporcional
-const calcularSueldoBásico = (diasMes, diasTrabajados) => {
+/**
+ * FUNCION: calcularSueldoBásico, devuelve el texto con el importe correspondiente al concepto Sueldo Básico;
+ * Si el empleado trabajó todos los dias se cobra el 100% del concepto; en caso contrario cobrará un proporcional
+ * PARAMETROS:
+ * 	diasMes (numero que representa la cantidad de dias del mes)
+ * 	diasTrabajados (numero que representa los dias efectivamente trabajados por el empleado)
+ */
+const calcularSueldoBasico = (diasMes, diasTrabajados) => {
 	const SB_LIQUIDACION = ((SUELDO_BASICO / diasMes) * diasTrabajados).toFixed(2);
-	return SB_LIQUIDACION;
+	return Intl.NumberFormat('de-DE').format(SB_LIQUIDACION);
+};
+
+/**
+ * FUNCION: calcularSueldoBásico, devuelve el texto con el importe correspondiente al concepto Presentismo];
+ * Si el empleado trabajó todos los dias se cobra el 100% del concepto; en caso contrario cobrará un proporcional
+ * PARAMETROS:
+ * 	diasMes (numero que representa la cantidad de dias del mes)
+ * 	diasTrabajados (numero que representa los dias efectivamente trabajados por el empleado)
+ */
+const calcularPresentismo = (diasMes, diasTrabajados) => {
+	const PRESENTISMO_LIQUIDACION = ((PRESENTISMO / diasMes) * diasTrabajados).toFixed(2);
+	return Intl.NumberFormat('de-DE').format(PRESENTISMO_LIQUIDACION);
+};
+
+/**
+ * FUNCION: calcularSueldoBásico, devuelve el texto con el importe correspondiente al concepto Remunerativo];
+ * Si el empleado trabajó todos los dias se cobra el 100% del concepto; en caso contrario cobrará un proporcional
+ * PARAMETROS:
+ * 	diasMes (numero que representa la cantidad de dias del mes)
+ * 	diasTrabajados (numero que representa los dias efectivamente trabajados por el empleado)
+ */
+const calcularRemunerativo = (diasMes, diasTrabajados) => {
+	const REMUNERATIVO_LIQUIDACION = ((REMUNERATIVO / diasMes) * diasTrabajados).toFixed(2);
+	return Intl.NumberFormat('de-DE').format(REMUNERATIVO_LIQUIDACION);
 };
 //FIN FUNCIONES A UTILIZAR ------------------------------------------------------------------------------------------
 
@@ -213,7 +242,13 @@ const HORAS_EXTRA = calcularExtras(HORAS_TRABAJADAS, HORAS_BASE);
 const FERIADOS_TRABAJADOS = pedirValor('FERIADOS TRABAJADOS, MES');
 
 //CALCULO SUELDO BÁSICO
-const SUELDO_BASICO_LIQUIDACION = calcularSueldoBásico(DIAS_MES, DIAS_TRABAJADOS);
+const SUELDO_BASICO_LIQUIDACION = calcularSueldoBasico(DIAS_MES, DIAS_TRABAJADOS);
+
+//CALCULO PRESENTISMO
+const PRESENTISMO_LIQUIDACION = calcularPresentismo(DIAS_MES, DIAS_TRABAJADOS);
+
+//CALCULO REMUNERATIVO
+const REMUNERATIVO_LIQUIDACION = calcularRemunerativo(DIAS_MES, DIAS_TRABAJADOS);
 
 //MUESTRO LA LIQUIDACIÓN POR CONSOLA ----------------------------------------
 console.log(
@@ -226,7 +261,10 @@ console.log(
 	Horas Extra: ${HORAS_EXTRA} 
 	Feriados Trabajados: ${FERIADOS_TRABAJADOS} \n
 	Liquidación:
-	Sueldo Básico: $ ${Intl.NumberFormat('de-DE').format(SUELDO_BASICO_LIQUIDACION)} `
+	Sueldo Básico: $ ${SUELDO_BASICO_LIQUIDACION} 
+	Presentismo  : $ ${PRESENTISMO_LIQUIDACION} 
+	Remunerativo : $ ${REMUNERATIVO_LIQUIDACION} 
+	`
 );
 
 // FIN ALGORITMO ***************************************************************************************************
