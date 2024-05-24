@@ -179,40 +179,18 @@ const calcularFeriados = (mes) => {
 };
 
 /**
- * FUNCION: calcularSueldoBásico, devuelve el texto con el importe correspondiente al concepto Sueldo Básico;
- * Si el empleado trabajó todos los dias se cobra el 100% del concepto; en caso contrario cobrará un proporcional
+ * FUNCION: calcularConceptoProporcional, devuelve en formato texto el importe proporcional correspondiente al concepto solicitado por argumento;
+ * Si el empleado trabajó todos los dias se cobra el 100% del concepto; en caso contrario cobrará un proporcional segun los dias trabajados
  * PARAMETROS:
  * 	diasMes (numero que representa la cantidad de dias del mes)
  * 	diasTrabajados (numero que representa los dias efectivamente trabajados por el empleado)
+ * 	importeConcepto (es el importe del concepto sobre el cual se desea calcular el importe a liquidar)
  */
-const calcularSueldoBasico = (diasMes, diasTrabajados) => {
-	const SB_LIQUIDACION = ((SUELDO_BASICO / diasMes) * diasTrabajados).toFixed(2);
-	return Intl.NumberFormat('de-DE').format(SB_LIQUIDACION);
+const calcularProporcional = (diasMes, diasTrabajados, importeConcepto) => {
+	const IMPORTE_LIQUIDACION = ((importeConcepto / diasMes) * diasTrabajados).toFixed(2);
+	return Intl.NumberFormat('de-DE').format(IMPORTE_LIQUIDACION);
 };
 
-/**
- * FUNCION: calcularSueldoBásico, devuelve el texto con el importe correspondiente al concepto Presentismo];
- * Si el empleado trabajó todos los dias se cobra el 100% del concepto; en caso contrario cobrará un proporcional
- * PARAMETROS:
- * 	diasMes (numero que representa la cantidad de dias del mes)
- * 	diasTrabajados (numero que representa los dias efectivamente trabajados por el empleado)
- */
-const calcularPresentismo = (diasMes, diasTrabajados) => {
-	const PRESENTISMO_LIQUIDACION = ((PRESENTISMO / diasMes) * diasTrabajados).toFixed(2);
-	return Intl.NumberFormat('de-DE').format(PRESENTISMO_LIQUIDACION);
-};
-
-/**
- * FUNCION: calcularSueldoBásico, devuelve el texto con el importe correspondiente al concepto Remunerativo];
- * Si el empleado trabajó todos los dias se cobra el 100% del concepto; en caso contrario cobrará un proporcional
- * PARAMETROS:
- * 	diasMes (numero que representa la cantidad de dias del mes)
- * 	diasTrabajados (numero que representa los dias efectivamente trabajados por el empleado)
- */
-const calcularRemunerativo = (diasMes, diasTrabajados) => {
-	const REMUNERATIVO_LIQUIDACION = ((REMUNERATIVO / diasMes) * diasTrabajados).toFixed(2);
-	return Intl.NumberFormat('de-DE').format(REMUNERATIVO_LIQUIDACION);
-};
 //FIN FUNCIONES A UTILIZAR ------------------------------------------------------------------------------------------
 
 // ALGORITMO *******************************************************************************************************
@@ -239,16 +217,31 @@ const DIAS_TRABAJADOS = calcularDiasTrabajados(HORAS_TRABAJADAS, HORAS_BASE, DIA
 const HORAS_EXTRA = calcularExtras(HORAS_TRABAJADAS, HORAS_BASE);
 
 //PIDO CANTIDAD DE FERIADOS TRABAJADOS POR EL EMPLEADO PARA EL MES Y AÑO SELECCIONADOS
-const FERIADOS_TRABAJADOS = pedirValor('FERIADOS TRABAJADOS, MES');
+const FERIADOS_TRABAJADOS = pedirValor('FERIADOS TRABAJADOS', MES);
 
 //CALCULO SUELDO BÁSICO
-const SUELDO_BASICO_LIQUIDACION = calcularSueldoBasico(DIAS_MES, DIAS_TRABAJADOS);
+const SUELDO_BASICO_LIQUIDACION = calcularProporcional(
+	DIAS_MES,
+	DIAS_TRABAJADOS,
+	SUELDO_BASICO
+);
 
 //CALCULO PRESENTISMO
-const PRESENTISMO_LIQUIDACION = calcularPresentismo(DIAS_MES, DIAS_TRABAJADOS);
+const PRESENTISMO_LIQUIDACION = calcularProporcional(
+	DIAS_MES,
+	DIAS_TRABAJADOS,
+	PRESENTISMO
+);
 
 //CALCULO REMUNERATIVO
-const REMUNERATIVO_LIQUIDACION = calcularRemunerativo(DIAS_MES, DIAS_TRABAJADOS);
+const REMUNERATIVO_LIQUIDACION = calcularProporcional(
+	DIAS_MES,
+	DIAS_TRABAJADOS,
+	REMUNERATIVO
+);
+
+//CALCULO VIATICOS
+const VIATICOS_LIQUIDACION = calcularProporcional(DIAS_MES, DIAS_TRABAJADOS, VIATICOS);
 
 //MUESTRO LA LIQUIDACIÓN POR CONSOLA ----------------------------------------
 console.log(
@@ -264,6 +257,7 @@ console.log(
 	Sueldo Básico: $ ${SUELDO_BASICO_LIQUIDACION} 
 	Presentismo  : $ ${PRESENTISMO_LIQUIDACION} 
 	Remunerativo : $ ${REMUNERATIVO_LIQUIDACION} 
+	Viáticos     : $ ${VIATICOS_LIQUIDACION} 
 	`
 );
 
