@@ -271,8 +271,19 @@ const calcularTiempoAntiguedad = (fechaAlta, fechaCalculo) => {
  * 	fechaCalculo (fecha que equivale al ultimo dia del mes con el que estamos trabajando)
  * 	diasTrabajados (cantidad de días que trabajó el empleado)
  * 	diasMes (es el número que representa la cantidad de dias del mes con el que se está trabajando)
+ *  sueldoBasico (importe correspondiente al concepto sueldo basico de escala - si bien es una variable
+ *  global, la envío por parámetro para que la funcion sea independiente)
+ * 	remunerativo (importe correspondiente al concepto remunerativo de escala - si bien es una variable
+ * global, la envío por parámetro para que la funcion sea independiente)
  */
-const calcularImporteAntiguedad = (fechaAlta, fechaCalculo, diasMes, diasTrabajados) => {
+const calcularImporteAntiguedad = (
+	fechaAlta,
+	fechaCalculo,
+	diasMes,
+	diasTrabajados,
+	sueldoBasico,
+	remunerativo
+) => {
 	const ANOS_ANTIGUEDAD = calcularTiempoAntiguedad(fechaAlta, fechaCalculo);
 	let porcentajeAntiguedad = 0;
 	let porcentajeAno;
@@ -289,7 +300,7 @@ const calcularImporteAntiguedad = (fechaAlta, fechaCalculo, diasMes, diasTrabaja
 	}
 	// ahora calculo el importe de la antiguedad
 	const ANTIGUEDAD_LIQUIDACION =
-		((SUELDO_BASICO + REMUNERATIVO) / diasMes) * diasTrabajados * porcentajeAntiguedad;
+		((sueldoBasico + remunerativo) / diasMes) * diasTrabajados * porcentajeAntiguedad;
 
 	return ANTIGUEDAD_LIQUIDACION;
 };
@@ -302,9 +313,18 @@ const calcularImporteAntiguedad = (fechaAlta, fechaCalculo, diasMes, diasTrabaja
  * PARÁMETROS:
  * 	horasExtraTrabajadas (cantidad de horas extra que trabajó el empleado en el mes)
  * 	importeAntiguedad (importe correspondiente al concepto antiguedad del empleado)
+ *  sueldoBasico (importe correspondiente al concepto sueldo basico de escala - si bien es una variable
+ *  global, la envío por parámetro para que la funcion sea independiente)
+ * 	remunerativo (importe correspondiente al concepto remunerativo de escala - si bien es una variable
+ * global, la envío por parámetro para que la funcion sea independiente)
  */
-const calcularImporteHorasExtra = (horasExtraTrabajadas, importeAntiguedad) => {
-	const HORA_NORMAL = (SUELDO_BASICO + importeAntiguedad + REMUNERATIVO) / 200;
+const calcularImporteHorasExtra = (
+	horasExtraTrabajadas,
+	importeAntiguedad,
+	sueldoBasico,
+	remunerativo
+) => {
+	const HORA_NORMAL = (sueldoBasico + importeAntiguedad + remunerativo) / 200;
 	const HORA_EXTRA = HORA_NORMAL * 1.5;
 	const IMPORTE_HORAS_EXTRA = HORA_EXTRA * horasExtraTrabajadas;
 	return IMPORTE_HORAS_EXTRA;
@@ -317,9 +337,18 @@ const calcularImporteHorasExtra = (horasExtraTrabajadas, importeAntiguedad) => {
  * PARÁMETROS:
  * 	feriadosTrabajados (cantidad de dias feriados que trabajó el empleado en el mes)
  * 	importeAntiguedad (importe correspondiente al concepto antiguedad del empleado)
+ * 	sueldoBasico (importe correspondiente al concepto sueldo basico de escala - si bien es una variable
+ *  global, la envío por parámetro para que la funcion sea independiente)
+ * 	remunerativo (importe correspondiente al concepto remunerativo de escala - si bien es una variable
+ * global, la envío por parámetro para que la funcion sea independiente)
  */
-const calcularImporteFeriados = (feriadosTrabados, importeAntiguedad) => {
-	const DIA_FERIADO = (SUELDO_BASICO + importeAntiguedad + REMUNERATIVO) / 25;
+const calcularImporteFeriados = (
+	feriadosTrabados,
+	importeAntiguedad,
+	sueldoBasico,
+	remunerativo
+) => {
+	const DIA_FERIADO = (sueldoBasico + importeAntiguedad + remunerativo) / 25;
 	const IMPORTE_FERIADOS = DIA_FERIADO * feriadosTrabados;
 
 	return IMPORTE_FERIADOS;
@@ -446,19 +475,25 @@ const ANTIGUEDAD_LIQUIDACION = calcularImporteAntiguedad(
 	EMPLEADO1.fechaAlta,
 	FECHA_FIN_MES,
 	DIAS_MES,
-	DIAS_TRABAJADOS
+	DIAS_TRABAJADOS,
+	SUELDO_BASICO,
+	REMUNERATIVO
 );
 
 //CALCULO HORAS EXTRA
 const HORAS_EXTRA_LIQUIDACION = calcularImporteHorasExtra(
 	HORAS_EXTRA,
-	ANTIGUEDAD_LIQUIDACION
+	ANTIGUEDAD_LIQUIDACION,
+	SUELDO_BASICO,
+	REMUNERATIVO
 );
 
 //CALCULO IMPORTE FERIADOS
 const FERIADOS_LIQUIDACION = calcularImporteFeriados(
 	FERIADOS_TRABAJADOS,
-	ANTIGUEDAD_LIQUIDACION
+	ANTIGUEDAD_LIQUIDACION,
+	SUELDO_BASICO,
+	REMUNERATIVO
 );
 
 //CALCULO SUMA NO REMUNERATIVA
@@ -521,7 +556,9 @@ const TOTAL_BOLSILLO = TOTAL_REMUNERATIVO + TOTAL_NO_REMUNERATIVO - TOTAL_DESCUE
 
 //MUESTRO LA LIQUIDACIÓN POR CONSOLA (procurar que sea ancha el area de consola------
 console.log(
-	`Datos ingresados:
+	`   Fecha de proceso: ${FECHA_HOY}
+	------------------------------------------------------------
+	Datos ingresados:
 	Mes: ${MES} Año: ${ANO}
 	Días del mes: ${DIAS_MES}
 	Horas base: ${HORAS_BASE}
@@ -538,8 +575,8 @@ console.log(
 	Presentismo  : $ ${formatearNumero(PRESENTISMO_LIQUIDACION)}
 	Feriados     : $ ${formatearNumero(FERIADOS_LIQUIDACION)}
 	Horas Extra  : $ ${formatearNumero(HORAS_EXTRA_LIQUIDACION)}
-	Viáticos     : 				  $ ${formatearNumero(VIATICOS_LIQUIDACION)}
-	Suma No Remun: 				  $ ${formatearNumero(NO_REMUNETATIVO_LIQUIDACION)}
+	Viáticos     : 			 	   $ ${formatearNumero(VIATICOS_LIQUIDACION)}
+	Suma No Remun: 				   $ ${formatearNumero(NO_REMUNETATIVO_LIQUIDACION)}
 	------------------------------------------------------------
 	TOTAL BONIFIC:   $ ${formatearNumero(TOTAL_REMUNERATIVO)}  $ ${formatearNumero(
 		TOTAL_NO_REMUNERATIVO
@@ -550,7 +587,7 @@ console.log(
 	SUVICO      : 								    $ ${formatearNumero(aporteSuvicoLiquidacion)}
 	Obra Social: 								    $ ${formatearNumero(APORTE_OBRA_SOCIAL_LIQUIDACION)}
 	------------------------------------------------------------
-	TOTAL DESCUENTOS:   							$ ${formatearNumero(TOTAL_DESCUENTOS)}
+	TOTAL DESCUENTOS:   						   $ ${formatearNumero(TOTAL_DESCUENTOS)}
 	------------------------------------------------------------
 	TOTAL DE BOLSILLO: $ ${formatearNumero(TOTAL_BOLSILLO)}
 	`
