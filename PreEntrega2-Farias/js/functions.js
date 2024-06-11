@@ -1,10 +1,10 @@
 //FUNCIONES A UTILIZAR ----------------------------------------------------------------------------------------------
 /**
- * FUNCIÓN: pedirValor solicita mediante prompt un determinado valor.
+ * *FUNCIÓN: pedirValor solicita mediante prompt un determinado valor.
  * PARÁMETROS:
- * 	nombreValor (es el nombre del valor a solicitar que se mostrará en el prompt)
- *  mes (es opcional y corresponde al numero del mes con el que se está trabajando)
- * Devuelve el valor para el nombreValor ingresado, luego de validarlo
+ * 	@param nombreValor (es el nombre del valor a solicitar que se mostrará en el prompt)
+ *  @param mes (es opcional y corresponde al numero del mes con el que se está trabajando)
+ * * Devuelve el valor para el nombreValor ingresado, luego de validarlo
  *
  */
 
@@ -68,9 +68,9 @@ const pedirValor = (nombreValor, mes) => {
 };
 
 /**
- * FUNCIÓN: calcularHorasBase devuelve las horas base del mes
+ * * FUNCIÓN: calcularHorasBase devuelve las horas base del mes
  * PARÁMETROS:
- * 	diasMes (es el número que representa la cantidad de dias del mes con el que se está trabajando)
+ * 	@param diasMes (es el número que representa la cantidad de dias del mes con el que se está trabajando)
  * SOBRE LAS HORAS DE TRABAJO
  * En los meses de 30 días las horas base son 208.
  * En los meses de 31 días las horas base son 216.
@@ -102,11 +102,11 @@ const calculaHorasBase = (diasMes) => {
 };
 
 /**
- * FUNCIÓN: calcularDiasTrabajados devuelve la equivalencia en días de trabajo en base a las horas base del mes
+ * * FUNCIÓN: calcularDiasTrabajados devuelve la equivalencia en días de trabajo en base a las horas base del mes
  * PARÁMETROS:
- * 	horasTrabajadas (número dehoras trabajadas por el empleado)
- * 	horasBase (número de horas base del mes seleccionado)
- * 	diasMes (es el número que representa la cantidad de dias del mes con el que se está trabajando)
+ * 	@param horasTrabajadas (número dehoras trabajadas por el empleado)
+ * 	@param horasBase (número de horas base del mes seleccionado)
+ * 	@param diasMes (es el número que representa la cantidad de dias del mes con el que se está trabajando)
  */
 
 const calcularDiasTrabajados = (horasTrabajadas, horasBase, diasMes) => {
@@ -118,13 +118,13 @@ const calcularDiasTrabajados = (horasTrabajadas, horasBase, diasMes) => {
 };
 
 /**
- * FUNCIÓN: calcularExtras devuelve las horas extras trabajadas en caso de corresponder
+ * * FUNCIÓN: calcularExtras devuelve las horas extras trabajadas en caso de corresponder
  * las horas extras son aquellas que exceden las horas base del mes
  * ej: si las horas base del mes son 208 y el empleado trabajo 216, le corresponden 8 horas extra
  * si el empleado trabajó menos de las horas base, la función devuelve cero
  * PARÁMETROS:
- * horasTrabajadas (número de horas trabajadas)
- * horasBase (número de horas base del mes)
+ * @param horasTrabajadas (número de horas trabajadas)
+ * @param horasBase (número de horas base del mes)
  */
 const calcularExtras = (horasTrabajadas, horasBase) => {
 	const HORAS_EXTRA = horasTrabajadas - horasBase;
@@ -135,9 +135,9 @@ const calcularExtras = (horasTrabajadas, horasBase) => {
 };
 
 /**
- * FUNCIÓN: calcularFeriados devuelve el numero de feriados correspondiente al mes y año que se pasa por parámetro
+ * * FUNCIÓN: calcularFeriados devuelve el numero de feriados correspondiente al mes y año que se pasa por parámetro
  * PARÁMETROS:
- * 	mes (es el número de mes) Hay que mejorar luego esta función agregando el numero de año
+ * 	@param mes (es el número de mes) Hay que mejorar luego esta función agregando el numero de año
  */
 const calcularFeriados = (mes) => {
 	let cantidadFeriados;
@@ -170,14 +170,14 @@ const calcularFeriados = (mes) => {
 };
 
 /**
- * FUNCIÓN:: calcularConceptoProporcional, devuelve el importe proporcional correspondiente al
+ * * FUNCIÓN:: calcularConceptoProporcional, devuelve el importe proporcional correspondiente al
  * concepto solicitado por argumento;
  * Si el empleado trabajó todos los dias se cobra el 100% del concepto; en caso contrario cobrará un
  * proporcional segun los dias trabajados
  * PARÁMETROS:
- * 	diasMes (numero que representa la cantidad de dias del mes)
- * 	diasTrabajados (numero que representa los dias efectivamente trabajados por el empleado)
- * 	importeConcepto (es el importe del concepto sobre el cual se desea calcular el importe a liquidar)
+ * 	@param diasMes (numero que representa la cantidad de dias del mes)
+ * 	@param diasTrabajados (numero que representa los dias efectivamente trabajados por el empleado)
+ * 	@param importeConcepto (es el importe del concepto sobre el cual se desea calcular el importe a liquidar)
  */
 const calcularProporcional = (diasMes, diasTrabajados, importeConcepto) => {
 	const IMPORTE_LIQUIDACION = (importeConcepto / diasMes) * diasTrabajados;
@@ -185,11 +185,11 @@ const calcularProporcional = (diasMes, diasTrabajados, importeConcepto) => {
 };
 
 /**
- * FUNCIÓN:: calcularTiempoAntiguedad, calcula y devuelve la cantidad de años, meses y dias
+ * * FUNCIÓN:: calcularTiempoAntiguedad, calcula y devuelve la cantidad de años, meses y dias
  * transcurridos desde la fecha de ingreso del empleado hasta el ultimo día del mes con el que se está trabajando
  * PARÁMETROS:
- * fechaAlta (fecha de ingreso del empleado)
- * fechaCalculo (fecha contra la cual se desea calcular el tiempo transcurrido)
+ * @param fechaAlta (fecha de ingreso del empleado)
+ * @param fechaCalculo (fecha contra la cual se desea calcular el tiempo transcurrido)
  */
 const calcularTiempoAntiguedad = (fechaAlta, fechaCalculo) => {
 	const FECHA_CALCULO = new Date(fechaCalculo);
@@ -222,16 +222,14 @@ const calcularTiempoAntiguedad = (fechaAlta, fechaCalculo) => {
 	return anos;
 };
 /**
- * FUNCIÓN:: calcularPorcentajeAntiguedad, devuelve el porcentaje que corresponde aplicar
- * para el cálculo del concepto antiguead, en función de la fecha
- * de alta que tenga el empleado
+ * * FUNCIÓN:: calcularPorcentajeAntiguedad, devuelve el porcentaje que corresponde aplicar para el cálculo del concepto antiguead, en función de la fecha de alta que tenga el empleado
  *
  * El PORCENTAJE a aplicar se basa en el siguiente esquema:
  * Desde el año 1 al  5 corresponde un 2% por año
  * Desde el año 6 al 10 corresponde un 1.5% por año
  * Dese el año 11 en adelante corresponde un 1% por año
  * PARÁMETROS:
- * 	anosAntiguedad (es la cantidad de años que tenga el empleado desde el alta en la empresa)
+ * 	@param anosAntiguedad (es la cantidad de años que tenga el empleado desde el alta en la empresa)
  */
 
 const calcularPorcentajeAntiguedad = (anosAntiguedad) => {
@@ -252,7 +250,7 @@ const calcularPorcentajeAntiguedad = (anosAntiguedad) => {
 };
 
 /**
- * FUNCIÓN:: calcularImporteAntiguedad, devuelve el importe correspondiente al
+ * * FUNCIÓN:: calcularImporteAntiguedad, devuelve el importe correspondiente al
  * concepto antiguead, en función de la fecha
  * de alta que tenga el empleado
  * Antiguedad es igual a ((Sueldo Bascio de escala + remunerativo de escala) /
@@ -264,12 +262,11 @@ const calcularPorcentajeAntiguedad = (anosAntiguedad) => {
  * Desde el año 6 al 10 corresponde un 1.5% por año
  * Dese el año 11 en adelante corresponde un 1% por año
  * PARÁMETROS:
- * 	anosAntiguedad (es la cantidad de años que tenga el empleado desde el alta en la empresa)
- * 	diasMes (es el número que representa la cantidad de dias del mes con el que se está trabajando)
- *  sueldoBasico (importe correspondiente al concepto sueldo basico de escala - si bien es una variable
- *  global, la envío por parámetro para que la funcion sea independiente)
- * 	remunerativo (importe correspondiente al concepto remunerativo de escala - si bien es una variable
- * global, la envío por parámetro para que la funcion sea independiente)
+ * 	@param anosAntiguedad (es la cantidad de años que tenga el empleado desde el alta en la empresa)
+ * 	@param diasMes (es el número que representa la cantidad de dias del mes con el que se está trabajando)
+ *  @param diasTrabajados (cantidad de dias que se calcularon en base a las horas trabajadas durante el mes)
+ *  @param sueldoBasico (importe correspondiente al concepto sueldo basico de escala - si bien es una variable global, la envío por parámetro para que la funcion sea independiente)
+ * 	@param remunerativo (importe correspondiente al concepto remunerativo de escala - si bien es una variable global, la envío por parámetro para que la funcion sea independiente)
  */
 
 const calcularImporteAntiguedad = (
@@ -290,17 +287,15 @@ const calcularImporteAntiguedad = (
 };
 
 /**
- * FUNCIÓN:: calcularImporteHorasExtra, devuelve el importe correspondiente a las horas extra trabajadas;
+ * * FUNCIÓN:: calcularImporteHorasExtra, devuelve el importe correspondiente a las horas extra trabajadas;
  * La hora normal equivale a: (Sueldo Basico de escala + Antiguedad del empleado + Remunerativo de escala) /200
  * La hora extra equivale a la hora normal mas un 50% de su valor.
  * Hora extra = (hora normal + 50%) * 1.5
  * PARÁMETROS:
- * 	horasExtraTrabajadas (cantidad de horas extra que trabajó el empleado en el mes)
- * 	importeAntiguedad (importe correspondiente al concepto antiguedad del empleado)
- *  sueldoBasico (importe correspondiente al concepto sueldo basico de escala - si bien es una variable
- *  global, la envío por parámetro para que la funcion sea independiente)
- * 	remunerativo (importe correspondiente al concepto remunerativo de escala - si bien es una variable
- * global, la envío por parámetro para que la funcion sea independiente)
+ * 	@param horasExtraTrabajadas (cantidad de horas extra que trabajó el empleado en el mes)
+ * 	@param importeAntiguedad (importe correspondiente al concepto antiguedad del empleado)
+ *  @param sueldoBasico (importe correspondiente al concepto sueldo basico de escala - si bien es una variable global, la envío por parámetro para que la funcion sea independiente)
+ * 	@param remunerativo (importe correspondiente al concepto remunerativo de escala - si bien es una variable global, la envío por parámetro para que la funcion sea independiente)
  */
 const calcularImporteHorasExtra = (
 	horasExtraTrabajadas,
@@ -315,16 +310,14 @@ const calcularImporteHorasExtra = (
 };
 
 /**
- * FUNCIÓN:: calcularImporteFeriados, devuelve el importe correspondiente a los dias feriados trabajados;
+ * * FUNCIÓN:: calcularImporteFeriados, devuelve el importe correspondiente a los dias feriados trabajados;
  * El día feriado se calcula: (Sueldo Basico de escala + Antiguedad del empleado + Remunerativo de escala) /25 * Cantidad de
  * feriados trabajados
  * PARÁMETROS:
- * 	feriadosTrabajados (cantidad de dias feriados que trabajó el empleado en el mes)
- * 	importeAntiguedad (importe correspondiente al concepto antiguedad del empleado)
- * 	sueldoBasico (importe correspondiente al concepto sueldo basico de escala - si bien es una variable
- *  global, la envío por parámetro para que la funcion sea independiente)
- * 	remunerativo (importe correspondiente al concepto remunerativo de escala - si bien es una variable
- * global, la envío por parámetro para que la funcion sea independiente)
+ * 	@param feriadosTrabajados (cantidad de dias feriados que trabajó el empleado en el mes)
+ * 	@param importeAntiguedad (importe correspondiente al concepto antiguedad del empleado)
+ * 	@param sueldoBasico (importe correspondiente al concepto sueldo basico de escala - si bien es una variable global, la envío por parámetro para que la funcion sea independiente)
+ * 	@param remunerativo (importe correspondiente al concepto remunerativo de escala - si bien es una variable global, la envío por parámetro para que la funcion sea independiente)
  */
 const calcularImporteFeriados = (
 	feriadosTrabados,

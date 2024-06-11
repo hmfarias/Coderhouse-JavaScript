@@ -1,28 +1,30 @@
-/*
-SIMULADOR LIQUIDACIÓN DE SUELDOS DE UN EMPLEADO DE SEGURIDAD PRIVADA
-USO: 
-PROCURAR TENER LO SUFICIENTEMENTE ANCHA LA ZONA DONDE SE MUESTRA LA CONSOLA
-PARA QUE EL RECIBO DE LIQUIDACION SE MUESTRE CORRECTAMENTE
+/**
+ * * SIMULADOR LIQUIDACIÓN DE SUELDOS DE UN EMPLEADO DE SEGURIDAD PRIVADA
+ *
+ * ! PROCURAR TENER LO SUFICIENTEMENTE ANCHA LA ZONA DONDE SE MUESTRA LA CONSOLA PARA QUE EL RECIBO DE LIQUIDACION SE MUESTRE CORRECTAMENTE
+ *
+ * * Se debe ingresar por prompt:
+ * - número de mes del 1 al  12 (cero para salir)
+ *
+ * - número de año de cuatro digitos (cero para salir)
+ *
+ * - número de DNI del empleado : son 8 dígitos y deben corresponder a los empleados que están cargados en el Array Empleados que se encuentra en el archivo data.js (los DNI ejemplo son 11111111, 22222222, ... al 77777777). Si no se coloca el DNI de uno de los empleados que existen en el array, se muestra una alerta informando
+ *
+ * - horas trabajadas teniendo en cuenta que en meses de 30 dias las horas base son 208, en meses de 31 dias las horas base son 216 y todo lo que excede de esas horas son horas extra. El simulador busca las horas base correspondientes al mes ingresado y en base a eso establece los dias trabajados a los que equivalen las horas ingresadas
+ * Si las horas ingresadas no son iguales o mayores a las horas base, se liquidará un proporcional
+ *
+ * - número de dias feriados trabajados. Estos feriados se encuentran previamente cargados de acuerdo al mes y el simulador no permitirá cargar una cantidad de feriados que no coincida con la cantidad maxima de feriados precargada para ese mes
+ *
+ * Se ha creado una clase Empleado y se han generado siete instancias de esa clase, dentro del array de objetos EMPLEADOS
+ *
+ * *El simulador muestra la liquidación para el empleado cuyo DNI se haya ingresado por prompt haciendo todos los cálculos (completos o proporcionales) en base a la fecha de ingreso que tenga el empleado y la cantidad de horas que ha cubierto en el mes.
+ *
+ * TODO: EN EL FUTURO, la idea es hacer la liquidación de TODOS LOS EMPLEADOS si así lo quisiera el usuario. Para ello se irá recorridendo el array de objetos EMPLEADOS donde se encuentran los datos de todos los empleados e ir liquidando sus haberes en función de las horas que hayan cubierto.
+ *
+ * TODO: Sobre las horas que haya cubierto, la idea en futuros avances, es generar arrays de objetos con los datos de cada mes y las horas que el empleado cubrió en cada uno, de modo que al seleccionar el mes y el año, y en base al DNI ingresado, se busque en el array correspondiente, las horas cubiertas para ese DNI y con ello hacer la liquidacion.
+ *
+ */
 
-Se debe ingresar por prompt:
- - número de mes del 1 al  12 (cero para salir)
- - número de año de cuatro digitos (cero para salir)
- - número de DNI del empleado : son 8 dígitos y deben corresponder a los empleados que están 
- cargados en el Array Empleados que se encuentra en el archivo data.js (los DNI ejemplo son 11111111, 22222222, ... al 77777777). Si no se coloca el DNI de uno de los empleados que existen en el array, se muestra una alerta informando
- - horas trabajadas teniendo en cuenta que en meses de 30 dias las horas base son 208, 
-	en meses de 31 dias las horas base son 216 y todo lo que excede de esas horas son horas extra
-	El simulador busca las horas base correspondientes al mes ingresado y en base a eso 
-	establece los dias trabajados a los que equivalen las horas ingresadas
-	Si las horas ingresadas no son iguales o mayores a las horas base, se liquidará un proporcional 
- - número de dias feriados trabajados. Estos feriados se encuentran previamente cargados de acuerdo al mes y el simulador no 
-	permitirá cargar una cantidad de feriados que no coincida con la cantidad maxima de feriados precargada para ese mes
-
-	Se ha creado una clase Empleado y se han generado siete instancias de esa clase, dentro del array de objetos EMPLEADOS
-	El simulador muestra la liquidación para el empleado cuyo DNI se haya ingresado, 
-	EN EL FUTURO, la idea es hacer la liquidación de TODOS LOS EMPLEADOS si así lo quisiera el usuario. Para ello se irá recorridendo el array de objetos EMPLEADOS donde se encuentran los datos de todos los empleados e ir liquidando sus haberes en función de las horas que hayan cubierto, 
-	Sobre las horas que haya cubierto, la idea en futuros avances, es generar arrays de objetos con los datos de cada mes y las horas que el empleado cubrió en cada uno, de modo que al seleccionar el mes y el año, y en base al DNI ingresado, se busque en el array correspondiente, las horas cubiertas para ese DNI y con ello hacer la liquidacion.
-
-*/
 /**IMPORTO CONSTANTES Y DATOS DE EMPLEADOS ---------------------- */
 import {
 	SUELDO_BASICO,
@@ -221,47 +223,54 @@ if (MES != 0) {
 			//MUESTRO LA LIQUIDACIÓN POR CONSOLA (procurar que sea ancha el area de consola------
 			console.log(
 				`   Fecha de proceso: ${FECHA_HOY}
-	------------------------------------------------------------
-	Datos ingresados:
-	Mes y Año a Liquidar: ${MES} / ${ANO}
-	Días del mes: ${DIAS_MES}
-	Legajo: ${EMPLEADO_ACTIVO.legajo}
-	DNI: ${EMPLEADO_ACTIVO.dni}
-	Nombre: ${EMPLEADO_ACTIVO.nombre}
-	Fecha Alta: ${EMPLEADO_ACTIVO.fechaAlta}
-	Antiguedad: ${ANOS_ANTIGUEDAD} años Porcentaje Antiguedad: ${formatearNumero(
+				------------------------------------------------------------
+				Datos ingresados:
+				Mes a Liquidar: ${MES} | Año a liquidar: ${ANO}
+				Días del mes: ${DIAS_MES}
+				Legajo: ${EMPLEADO_ACTIVO.legajo}
+				DNI: ${EMPLEADO_ACTIVO.dni} CUIL: ${EMPLEADO_ACTIVO.cuil}
+				Nombre: ${EMPLEADO_ACTIVO.nombre}
+				Categoría: ${EMPLEADO_ACTIVO.tipo} Estado: ${EMPLEADO_ACTIVO.estado}
+				Fecha Nacimiento: ${EMPLEADO_ACTIVO.fechaNacimiento}
+				Fecha Alta: ${EMPLEADO_ACTIVO.fechaAlta}  Fecha Baja: ${EMPLEADO_ACTIVO.fechaBaja}
+				Email: ${EMPLEADO_ACTIVO.email}
+				Antiguedad: ${ANOS_ANTIGUEDAD} años Porcentaje: ${formatearNumero(
 					PORCENTAJE_ANTIGUEDAD * 100
 				)}%
-	Horas base: ${HORAS_BASE}
-	Horas Trabajadas: ${HORAS_TRABAJADAS}
-	Dias a liquidar: ${DIAS_TRABAJADOS}
-	Horas Extra: ${HORAS_EXTRA}
-	Feriados Trabajados: ${FERIADOS_TRABAJADOS} \n
-	------------------------------------------------------------
-	Liquidación:   REMUNERATIVOS  NO REMUNERATIVOS   DESCUENTOS
-	------------------------------------------------------------
-	Sueldo Básico: $ ${formatearNumero(SUELDO_BASICO_LIQUIDACION)}
-	Antiguedad   : $ ${formatearNumero(ANTIGUEDAD_LIQUIDACION)}
-	Remunerativo : $ ${formatearNumero(REMUNERATIVO_LIQUIDACION)}
-	Presentismo  : $ ${formatearNumero(PRESENTISMO_LIQUIDACION)}
-	Feriados     : $ ${formatearNumero(FERIADOS_LIQUIDACION)}
-	Horas Extra  : $ ${formatearNumero(HORAS_EXTRA_LIQUIDACION)}
-	Viáticos     : 			 	   $ ${formatearNumero(VIATICOS_LIQUIDACION)}
-	Suma No Remun: 				   $ ${formatearNumero(NO_REMUNETATIVO_LIQUIDACION)}
-	------------------------------------------------------------
-	TOTAL BONIFIC:   $ ${formatearNumero(TOTAL_REMUNERATIVO)}  $ ${formatearNumero(
+				Horas base: ${HORAS_BASE}
+				Horas Trabajadas: ${HORAS_TRABAJADAS}
+				Dias a liquidar: ${DIAS_TRABAJADOS}
+				Horas Extra: ${HORAS_EXTRA}
+				Feriados Trabajados: ${FERIADOS_TRABAJADOS} \n
+				-------------------------------------------------------------------
+				Liquidación:  Cant   REMUNERATIVOS  NO REMUNERATIVOS   DESCUENTOS
+				-------------------------------------------------------------------
+				Sueldo Básico: ${DIAS_TRABAJADOS}      $ ${formatearNumero(SUELDO_BASICO_LIQUIDACION)}
+				Antiguedad   : ${formatearNumero(PORCENTAJE_ANTIGUEDAD * 100)}%     $ ${formatearNumero(
+					ANTIGUEDAD_LIQUIDACION
+				)}
+				Remunerativo : ${DIAS_TRABAJADOS}      $ ${formatearNumero(REMUNERATIVO_LIQUIDACION)}
+				Presentismo  : ${DIAS_TRABAJADOS}      $ ${formatearNumero(PRESENTISMO_LIQUIDACION)}
+				Feriados     :  ${FERIADOS_TRABAJADOS}      $ ${formatearNumero(FERIADOS_LIQUIDACION)}
+				Horas Extra  : ${HORAS_EXTRA}      $ ${formatearNumero(HORAS_EXTRA_LIQUIDACION)}
+				Viáticos     : ${DIAS_TRABAJADOS}    			 	     $ ${formatearNumero(VIATICOS_LIQUIDACION)}
+				Suma No Remun: ${DIAS_TRABAJADOS}    				     $ ${formatearNumero(
+					NO_REMUNETATIVO_LIQUIDACION
+				)}
+				-------------------------------------------------------------------
+				TOTAL BONIFIC:         $ ${formatearNumero(TOTAL_REMUNERATIVO)}  $ ${formatearNumero(
 					TOTAL_NO_REMUNERATIVO
 				)}     
-	------------------------------------------------------------
-	Jubilación  : 								    $ ${formatearNumero(APORTE_JUBILATORIO_LIQUIDACION)}
-	Ley 19.032  : 								    $ ${formatearNumero(APORTE_LEY19032_LIQUIDACION)}
-	SUVICO      : 								    $ ${formatearNumero(aporteSuvicoLiquidacion)}
-	Obra Social: 								    $ ${formatearNumero(APORTE_OBRA_SOCIAL_LIQUIDACION)}
-	------------------------------------------------------------
-	TOTAL DESCUENTOS:   						   $ ${formatearNumero(TOTAL_DESCUENTOS)}
-	------------------------------------------------------------
-	TOTAL DE BOLSILLO: $ ${formatearNumero(TOTAL_BOLSILLO)}
-	`
+				-------------------------------------------------------------------
+				Jubilación  :     								      $ ${formatearNumero(APORTE_JUBILATORIO_LIQUIDACION)}
+				Ley 19.032  :     								      $ ${formatearNumero(APORTE_LEY19032_LIQUIDACION)}
+				SUVICO      :     								      $ ${formatearNumero(aporteSuvicoLiquidacion)}
+				Obra Social:     								      $ ${formatearNumero(APORTE_OBRA_SOCIAL_LIQUIDACION)}
+				-------------------------------------------------------------------
+				TOTAL DESCUENTOS:       						     $ ${formatearNumero(TOTAL_DESCUENTOS)}
+				-------------------------------------------------------------------
+				TOTAL DE BOLSILLO:       $ ${formatearNumero(TOTAL_BOLSILLO)}
+				`
 			);
 
 			// FIN ALGORITMO ***************************************************************************************************
