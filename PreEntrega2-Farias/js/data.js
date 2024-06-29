@@ -131,9 +131,9 @@ const EMPLEADOS = [
 		'SI'
 	),
 ];
+/**FIN CREO ARRAY DE EMPLEADOS ---------------------------------- */
 
 export {
-	/**FIN CREO ARRAY DE EMPLEADOS ---------------------------------- */
 	SUELDO_BASICO,
 	PRESENTISMO,
 	REMUNERATIVO,
